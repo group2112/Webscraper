@@ -35,9 +35,7 @@ def getLinks(plz_von, plz_bis):
     request.add_header("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:33.0) Gecko/20100101 Firefox/33.0")
 
     #The search request 
-    searchResult = urllib.request.urlopen(request)
-
-    soup = BeautifulSoup(searchResult)
+    soup = doRequest(request)
 
     for link in soup.find_all('a'):
         database.append(link.get('href'))
@@ -52,8 +50,14 @@ def getLinks(plz_von, plz_bis):
     return links
 
 
+#Performs a HTTP-'POST' request, passes it to BeautifulSoup and returns the result
+def doRequest(request):
+    requestResult = urllib.request.urlopen(request)
+    soup = BeautifulSoup(requestResult)
+    return soup
+
 links = getLinks(50000, 50126)
 
-
+print(links)
 
         
