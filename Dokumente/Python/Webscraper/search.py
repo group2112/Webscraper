@@ -64,7 +64,7 @@ def searchOnLinks(links):
     adresses = []
     for item in links:
         adresses.append(getContactInfoFromPage(item))
-        time.sleep(0.3)
+        time.sleep(1.0)
 
     return adresses
 
@@ -92,8 +92,11 @@ def getContactInfoFromPage(page):
     request.add_header("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:33.0) Gecko/20100101 Firefox/33.0")
     soup = doRequest(request)
 
-    name = getFieldValue(soup, "Name")
-    data.append(name)
+    findeName = soup.findAll('b')
+    name = findeName[2]
+    name = name.string.split('>')
+
+    data.append(name[0])
 
     straße = getFieldValue(soup, "Straße")
     data.append(straße)
@@ -119,8 +122,9 @@ def getFieldValue(soup, field):
     field_label = soup.find('td', text=field + ':')
     return field_label.find_next_sibling('td').get_text(strip=True)
 
-links = getLinksFromSearch(50000, 50126)
+links = getLinksFromSearch(50000, 50130)
 
 data = searchOnLinks(links)
 
-print(data)
+for element in data:
+    print(element)
