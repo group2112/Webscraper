@@ -65,11 +65,12 @@ def searchOnLinks(links):
     adresses = []
     i = 1
     j = len(links)
+    print("Found", j, "results, collecting data.")
     for item in links:
         adresses.append(getContactInfoFromPage(item, i, j))
         i = i + 1
-        time.sleep(0.3)
-
+        time.sleep(0.1)
+    print("All done.")
     return adresses
 
 #A method to scrape the contact info from the search result
@@ -93,13 +94,14 @@ def getContactInfoFromPage(page, i, j):
             ]
     
     request = urllib.request.Request("http://www.altenheim-adressen.de/schnellsuche/" + page)
-    request.add_header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
+    #request.add_header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
+    request.add_header("Content-Type", "text/html;charset=UTF-8")
     request.add_header("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:33.0) Gecko/20100101 Firefox/33.0")
     
     
     print("(" , i , "/" , j , ") Making request...") 
     soup = doRequest(request)
-    print("Request finished.")
+    print("Done.")
 
     findeName = soup.findAll('b')
     name = findeName[2]
@@ -133,23 +135,25 @@ def getFieldValue(soup, field):
 
 #The main input/output function
 def inputOutput():
-    plz_von = input("Bitte erste PLZ eingeben: ")
-    plz_bis = input("Bitte zweite PLZ eingeben: ")
+    #PLZ is German for zip-code and consists of a five-digit number
+    #The program passes the numbers to the servers, and the server
+    #returns all search results between the two numbers
+    plz_von = input("Please enter first PLZ: ")
+    plz_bis = input("Please enter second PLZ: ")
 
     links = getLinksFromSearch(plz_von, plz_bis)
 
     #Checks if the search yielded any results
     if len(links) > 0:
         data = searchOnLinks(links)
-        #Sort list in ascending order by zip-code
-        sorted(data, key=operator.itemgetter(1)) 
+        file_name = input("Save as: ")
         print("Writing to file...")
-        with open('test.csv', 'w', newline='') as fp:
+        with open(file_name + '.csv', 'w', newline='') as fp:
             a = csv.writer(fp, delimiter=',')
             a.writerows(data)
 
     else:
-        print("The search result was empty.")
+        print("The search yielded no results.")
 
 
 inputOutput()
