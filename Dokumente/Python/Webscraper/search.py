@@ -1,6 +1,6 @@
 import urllib.request
 import time
-import re
+import json
 
 from bs4 import BeautifulSoup
 
@@ -25,7 +25,7 @@ def getLinksFromSearch(plz_von, plz_bis):
     'plz_ff2': plz_bis,
     'ort_ff': '',
     'bundesland_ff': '',
-    'land_ff': '',
+    'land_ff': 'DE',
     'traeger_ff': '',
     'Dachverband_ff': '',
     'submit2' : 'Suchen'
@@ -64,7 +64,7 @@ def searchOnLinks(links):
     adresses = []
     for item in links:
         adresses.append(getContactInfoFromPage(item))
-        time.sleep(1.0)
+        time.sleep(0.3)
 
     return adresses
 
@@ -122,9 +122,11 @@ def getFieldValue(soup, field):
     field_label = soup.find('td', text=field + ':')
     return field_label.find_next_sibling('td').get_text(strip=True)
 
-links = getLinksFromSearch(50000, 50130)
+links = getLinksFromSearch(50000, 50200)
 
 data = searchOnLinks(links)
 
-for element in data:
-    print(element)
+print(data)
+
+with open('data.txt', 'w') as outfile:
+  json.dump(data, outfile)
