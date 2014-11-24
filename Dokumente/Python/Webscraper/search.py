@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 #Performs a HTTP-'POST' request, passes it to BeautifulSoup and returns the result
 def doRequest(request):
     requestResult = urllib.request.urlopen(request)
-    soup = BeautifulSoup(requestResult)
+    soup = BeautifulSoup(requestResult, from_encoding='utf8')
     return soup
 
 
@@ -101,6 +101,7 @@ def getContactInfoFromPage(page, i, j):
     
     print("(" , i , "/" , j , ") Making request...") 
     soup = doRequest(request)
+    
     print("Done.")
 
     findeName = soup.findAll('b')
