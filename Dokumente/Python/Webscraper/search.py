@@ -1,6 +1,7 @@
 import urllib.request
 import time
-import json
+import csv
+import operator
 
 from bs4 import BeautifulSoup
 
@@ -59,16 +60,20 @@ def getLinksFromSearch(plz_von, plz_bis):
 
 
 
-
+#Performs a search on the link results
 def searchOnLinks(links):
     adresses = []
+    i = 1
+    j = len(links)
     for item in links:
-        adresses.append(getContactInfoFromPage(item))
+        adresses.append(getContactInfoFromPage(item, i, j))
+        i = i + 1
         time.sleep(0.3)
 
     return adresses
 
-def getContactInfoFromPage(page):
+#A method to scrape the contact info from the search result
+def getContactInfoFromPage(page, i, j):
     name = ''
     straße = ''
     plz = ''
@@ -90,7 +95,11 @@ def getContactInfoFromPage(page):
     request = urllib.request.Request("http://www.altenheim-adressen.de/schnellsuche/" + page)
     request.add_header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
     request.add_header("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:33.0) Gecko/20100101 Firefox/33.0")
+    
+    
+    print("(" , i , "/" , j , ") Making request...") 
     soup = doRequest(request)
+    print("Request finished.")
 
     findeName = soup.findAll('b')
     name = findeName[2]
@@ -117,16 +126,30 @@ def getContactInfoFromPage(page):
 
     return data
     
-
+#Strips the text from the given field's sibling
 def getFieldValue(soup, field):
     field_label = soup.find('td', text=field + ':')
     return field_label.find_next_sibling('td').get_text(strip=True)
 
-links = getLinksFromSearch(50000, 50200)
+#The main input/output function
+def inputOutput():
+    plz_von = input("Bitte erste PLZ eingeben: ")
+    plz_bis = input("Bitte zweite PLZ eingeben: ")
 
-data = searchOnLinks(links)
+    links = getLinksFromSearch(plz_von, plz_bis)
 
-print(data)
+    #Checks if the search yielded any results
+    if len(links) > 0:
+        data = searchOnLinks(links)
+        #Sort list in ascending order by zip-code
+        sorted(data, key=operator.itemgetter(1)) 
+        print("Writing to file...")
+        with open('test.csv', 'w', newline='') as fp:
+            a = csv.writer(fp, delimiter=',')
+            a.writerows(data)
 
-with open('data.txt', 'w') as outfile:
-  json.dump(data, outfile)
+    else:
+        print("The search result was empty.")
+
+
+inputOutput()
