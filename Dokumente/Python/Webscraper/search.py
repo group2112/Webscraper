@@ -1,7 +1,6 @@
 import urllib.request
 import time
 import csv
-import operator
 
 from bs4 import BeautifulSoup
 
@@ -76,7 +75,7 @@ def searchOnLinks(links):
 #A method to scrape the contact info from the search result
 def getContactInfoFromPage(page, i, j):
     name = ''
-    straße = ''
+    strasse = ''
     plz = ''
     stadt = ''
     telefon = ''
@@ -110,8 +109,8 @@ def getContactInfoFromPage(page, i, j):
 
     data.append(name[0])
 
-    straße = getFieldValue(soup, "Straße")
-    data.append(straße)
+    strasse = getFieldValue(soup, "Straße")
+    data.append(strasse)
 
     ort = getFieldValue(soup, "Ort")
     (plz, stadt) = ort.split(' ', 1)
