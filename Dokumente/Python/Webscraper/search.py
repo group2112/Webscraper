@@ -100,8 +100,6 @@ def getContactInfoFromPage(page, i, j):
     
     print("(" , i , "/" , j , ") Making request...") 
     soup = doRequest(request)
-    
-    print("Done.")
 
     findeName = soup.findAll('b')
     name = findeName[2]
