@@ -141,11 +141,18 @@ def plzInput():
     return plz_von, plz_bis
 
 #The main input/output function
-def main():
+def inputOutput():
+    plz_von = 0
+    plz_bis = 0
+    
+    while True:
+        (plz_von, plz_bis) = plzInput()
+        try:
+            links = getLinksFromSearch(plz_von, plz_bis)
+            break
+        except urllib.error.HTTPError:
+            print("Error! Input raised an HTTP-Exception. Please enter valid input.")
 
-    (plz_von, plz_bis) = plzInput()
-
-    links = getLinksFromSearch(plz_von, plz_bis)
 
     #Checks if the search yielded any results
     if len(links) > 0:
@@ -160,5 +167,12 @@ def main():
     else:
         print("The search yielded no results.")
 
-
+#Program entry point
+def main():
+    while True:
+        inputOutput()
+        inputVar = input("If you want to run the application again, enter -y-. If you want to terminate it, enter any key: ")
+        if inputVar != "y":
+            break
+            
 main()
