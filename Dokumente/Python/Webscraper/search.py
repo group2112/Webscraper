@@ -131,18 +131,25 @@ def getFieldValue(soup, field):
     field_label = soup.find('td', text=field + ':')
     return field_label.find_next_sibling('td').get_text(strip=True)
 
-#The main input/output function
-def inputOutput():
-    #PLZ is German for zip-code and consists of a five-digit number
-    #The program passes the numbers to the servers, and the server
-    #returns all search results between the two numbers
+
+#PLZ is German for zip-code and consists of a five-digit number
+#The program passes the numbers to the servers, and the server
+#returns all search results between the two numbers
+def plzInput():
     plz_von = input("Please enter first PLZ: ")
     plz_bis = input("Please enter second PLZ: ")
+    return plz_von, plz_bis
+
+#The main input/output function
+def main():
+
+    (plz_von, plz_bis) = plzInput()
 
     links = getLinksFromSearch(plz_von, plz_bis)
 
     #Checks if the search yielded any results
     if len(links) > 0:
+        print("The search yielded", len(links), "results.")
         data = searchOnLinks(links)
         file_name = input("Save as: ")
         print("Writing to file...")
@@ -154,4 +161,4 @@ def inputOutput():
         print("The search yielded no results.")
 
 
-inputOutput()
+main()
