@@ -156,23 +156,27 @@ def inputOutput():
 
     #Checks if the search yielded any results
     if len(links) > 0:
-        print("The search yielded", len(links), "results.")
-        data = searchOnLinks(links)
-        file_name = input("Save as: ")
-        print("Writing to file...")
-        with open(file_name + '.csv', 'w', newline='') as fp:
-            a = csv.writer(fp, delimiter=',')
-            a.writerows(data)
-
+        print("The search returned", len(links), "results.")
+        print('To proceed, enter "go".')
+        localVar = input('To do a new search, enter any key: ')
+        if localVar == 'go':
+            data = searchOnLinks(links)
+            file_name = input("Save as: ")
+            print("Writing to file...")
+            with open(file_name + '.csv', 'w', newline='') as fp:
+                a = csv.writer(fp, delimiter=',')
+                a.writerows(data)
+        else:
+            return
     else:
-        print("The search yielded no results.")
+        print("The search returned no results.")
 
 #Program entry point
 def main():
     while True:
         inputOutput()
-        inputVar = input("If you want to run the application again, enter -y-. If you want to terminate it, enter any key: ")
-        if inputVar != "y":
+        inputVar = input('If you want to run the application again, enter "y". To exit, enter any key: ')
+        if inputVar != 'y':
             break
             
 main()
