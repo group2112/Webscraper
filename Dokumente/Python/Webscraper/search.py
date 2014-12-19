@@ -64,11 +64,11 @@ def searchOnLinks(links):
     adresses = []
     i = 1
     j = len(links)
-    print("Found", j, "results, collecting data.")
+    print("Found " + str(j) + " results, collecting data.")
     for item in links:
         adresses.append(getContactInfoFromPage(item, i, j))
         i = i + 1
-        time.sleep(0.1)
+        #time.sleep(0.1)
     print("All done.")
     return adresses
 
@@ -98,7 +98,7 @@ def getContactInfoFromPage(page, i, j):
     request.add_header("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:33.0) Gecko/20100101 Firefox/33.0")
     
     
-    print("(" , i , "/" , j , ") Making request...") 
+    print("(" + str(i) + "/" + str(j) + ") Making request...") 
     soup = doRequest(request)
 
     findeName = soup.findAll('b')
